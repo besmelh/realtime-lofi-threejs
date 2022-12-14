@@ -28,17 +28,26 @@ export default function Home() {
         />
         <color attach='background' args={['#D0E4E5']} />
 
-        <PivotControls>
-          <Suspense fallback={null}>
+        <Suspense fallback={null}>
+          <PivotControls>
             <Tree
-              scale={[0.5, 0.5, 0.5]}
+              scale={[0.5, 0.5, 0.6]}
               rotation={[0, 80, 0]}
               position={[0, 3, 0]}
             />
-            <Environment files='models/ghibli-bg.hdr' />
-            <ContactShadows opacity={0.2} color='#02261f' />
-          </Suspense>
-        </PivotControls>
+          </PivotControls>
+
+          <PivotControls>
+            <Tree
+              scale={[0.8, 0.8, 0.6]}
+              rotation={[80, 160, 80]}
+              position={[10, 5, 0]}
+            />
+          </PivotControls>
+
+          <Environment files='models/ghibli-bg.hdr' />
+          <ContactShadows opacity={0.2} color='#02261f' />
+        </Suspense>
       </Canvas>
     </div>
   );
