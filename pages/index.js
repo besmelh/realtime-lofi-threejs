@@ -137,15 +137,15 @@ export default function Home() {
       />
     );
   }
-
   return (
     <div className='container'>
       {waitForElement()}
       <Canvas camera={{ fov: 100, position: [0, 0, 5] }}>
         {/********** development helpers *********/}
         {/* <OrbitControls /> */}
-        <Stats />
-        <axesHelper args={[3]} />
+        {/* <Stats /> */}
+        {/* <axesHelper args={[3]} /> */}
+
         {/********** environment and lighting *********/}
         {sky}
         <hemisphereLight intensity={0.1} />
