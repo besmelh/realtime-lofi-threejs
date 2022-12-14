@@ -465,6 +465,11 @@ react-dom@18.2.0, react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
+react-geolocated@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-geolocated/-/react-geolocated-4.0.3.tgz#d0656f7b7ff1578e8499c79828c063e729635cc2"
+  integrity sha512-p+BObdbWT4kINILkUZtqkWHippBsCLnQ+dyx9Bnd+m3086Xkw7VKWxcFavCd2pG6AM50jsiMJiDu0+DjelnT9g==
+
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -555,6 +560,11 @@ styled-jsx@5.1.0:
   integrity sha512-/iHaRJt9U7T+5tp6TRelLnqBqiaIT0HsO0+vgyj8hK2KUk7aejFqRrumqPUlAqDwAj8IbS/1hk3IhBAAK/FCUQ==
   dependencies:
     client-only "0.0.1"
+
+suncalc@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/suncalc/-/suncalc-1.9.0.tgz#26212353fae61edb287c2d558fc4932ecf0e1532"
+  integrity sha512-vMJ8Byp1uIPoj+wb9c1AdK4jpkSKVAywgHX0lqY7zt6+EWRRC3Z+0Ucfjy/0yxTVO1hwwchZe4uoFNqrIC24+A==
 
 suspend-react@^0.0.8:
   version "0.0.8"

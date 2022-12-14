@@ -1,4 +1,4 @@
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import {
   Stats,
@@ -11,23 +11,43 @@ import {
 } from '@react-three/drei';
 import Spotify from 'react-spotify-embed';
 import Tree from '../components/Tree';
+import SunCalc from 'suncalc';
+import { useGeolocated } from 'react-geolocated';
 
 export default function Home() {
+  const { coords } = useGeolocated({
+    positionOptions: {
+      enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 5000,
+  });
+
+  let curTime = new Date();
+  // coordinates of hawaii are default
+  var long = 19.8968;
+  var lat = 155.5828;
+
+  function waitForElement() {
+    if (typeof coords !== 'undefined') {
+      long = coords.longitude;
+      lat = coords.latitude;
+    } else {
+      setTimeout(waitForElement, 250);
+    }
+  }
+
+  var times = SunCalc.getTimes(curTime, long, lat);
+times.
   return (
     <div className='container'>
+      {waitForElement()}
       <Canvas camera={{ fov: 100, position: [0, 0, 5] }}>
         {/********** development helpers *********/}
         {/* <OrbitControls /> */}
         <Stats />
         <axesHelper args={[3]} />
-
         {/********** environment and lighting *********/}
-        <Sky
-          distance={450000}
-          sunPosition={[1, 0.9, 0]}
-          inclination={0.2}
-          azimuth={0.2}
-        />
+        <Sky />
         <hemisphereLight intensity={0.1} />
         <Environment files='models/ghibli-bg.hdr' />
         <ContactShadows opacity={0.2} color='#02261f' />
@@ -49,7 +69,6 @@ export default function Home() {
           rotation={[0, 0, 0]}
           color='#fff1d4'
         />
-
         {/********** elements *********/}
         <Suspense fallback={null}>
           {/********** trees *********/}
