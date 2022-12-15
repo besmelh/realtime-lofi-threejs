@@ -11,25 +11,10 @@ export default function Tree(props) {
 
   const treeRef = useRef(null);
 
-  useFrame(() => {
-    if (treeRef.current) {
-      while (treeRef.current.position.x < 90) {
-        console.log('cur x1:', treeRef.current.rotation.x);
-        treeRef.current.position.x += 1;
-      }
-
-      while (treeRef.current.position.x > -90) {
-        console.log('cur x2:', treeRef.current.rotation.x);
-        treeRef.current.position.x -= 1;
-      }
-    }
-  });
-
   return (
     <group {...props} dispose={null}>
       {foliage.map((f) => (
         <mesh
-          ref={treeRef}
           geometry={nodes.Foliage.geometry}
           position={f.position}
           rotation={f.rotation}
