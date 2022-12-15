@@ -1,5 +1,5 @@
 import { Suspense, useRef, useState, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import {
   Stats,
   OrbitControls,
@@ -13,6 +13,7 @@ import Spotify from 'react-spotify-embed';
 import Tree from '../components/Tree';
 import SunCalc from 'suncalc';
 import { useGeolocated } from 'react-geolocated';
+import Cloud from '../components/Cloud';
 
 export default function Home() {
   const { coords } = useGeolocated({
@@ -137,6 +138,7 @@ export default function Home() {
       />
     );
   }
+
   return (
     <div className='container'>
       {waitForElement()}
@@ -204,9 +206,9 @@ export default function Home() {
             position={[10, -1, 0]}
           />
 
-          {/********** cloudss *********/}
+          {/********** clouds *********/}
 
-          <Tree
+          <Cloud
             scale={[1, 1, 2]}
             rotation={[0, 80, 0]}
             position={[-35, 12, -15]}
@@ -220,21 +222,21 @@ export default function Home() {
             color='#fffedb'
           />
 
-          <Tree
+          <Cloud
             scale={[1, 1, 2]}
             rotation={[0, 80, 0]}
             position={[-10, 12, -10]}
             color='#e8fcfb'
           />
 
-          <Tree
+          <Cloud
             scale={[1, 1, 2]}
             rotation={[0, 90, 180]}
             position={[8, 12, -20]}
             color='#e8fcfb'
           />
 
-          <Tree
+          <Cloud
             scale={[1, 1, 1.8]}
             rotation={[0, 80, 0]}
             position={[25, 12, -12]}

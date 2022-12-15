@@ -3,16 +3,24 @@ import { Suspense, useRef, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import PropTypes from 'prop-types';
 
-export default function Tree(props) {
+export default function Cloud(props) {
   const { nodes, materials } = useGLTF('/models/tree.gltf');
-
   let foliage = props.foliage;
   let color = props.color;
 
-  const treeRef = useRef(null);
+  const cloudRef = useRef(null);
+
+  useFrame(() => {
+    if (cloudRef.current) {
+      cloudRef.current.position.x += 0.01;
+      if (cloudRef.current.position.x >= 80) {
+        cloudRef.current.position.x = -80;
+      }
+    }
+  });
 
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} ref={cloudRef}>
       {foliage.map((f) => (
         <mesh
           geometry={nodes.Foliage.geometry}
@@ -27,8 +35,8 @@ export default function Tree(props) {
   );
 }
 
-Tree.defaultProps = {
-  color: '#067962',
+Cloud.defaultProps = {
+  color: '#e8fcfb',
   foliage: [
     {
       position: [-0.08, 3.36, 3.31],
