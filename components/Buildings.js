@@ -1,0 +1,64 @@
+import React, { useEffect, useRef, Suspense } from 'react';
+import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
+
+export default function Buildings(props) {
+  const mesh = useRef();
+
+  /*
+    We want the scale of the frequency data (0 - 255) to map to the scale of the spheres.
+     */
+  function adjustScale(number, inMin, inMax, outMin, outMax) {
+    return ((number - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+  }
+
+  /*
+   * Each sphere is getting its own analyzer node.
+   * This sets the scale of the spheres as the music plays.
+   * Setting the size to every second index of the frequency data.
+   */
+  function Analyzer({ sound }) {
+    const analyzer = useRef();
+
+    useEffect(() => {
+      analyzer.current = new THREE.AudioAnalyser(sound.current, 128);
+    }, [sound]);
+
+    useFrame(() => {
+      if (analyzer.current) {
+        let data = analyzer.current.getFrequencyData();
+        mesh.current.scale.y = adjustScale(
+          data[props.index * 2],
+          0,
+          255,
+          0.25,
+          1.5
+        );
+      }
+    });
+
+    return <></>;
+  }
+
+  return (
+    <>
+      <mesh position={props.position} ref={mesh}>
+        <boxGeometry args={[0.4, 3, 0.4]} />
+        <meshStandardMaterial color={'orange'} />
+      </mesh>
+      <Analyzer sound={props.sound} />
+    </>
+    // <>
+    //   {[...Array(num)].map((x, i) => (
+    //     <mesh {...props} position={[i - 5, 0, 0]}>
+    //       <boxGeometry args={[0.4, 3, 0.4]} />
+    //       <meshStandardMaterial color={'orange'} />
+    //     </mesh>
+    //   ))}
+
+    //   <Suspense fallback={null}>
+    //     <PositionalAudio url='./music.mp3' distance={10} loop />
+    //   </Suspense>
+    // </>
+  );
+}

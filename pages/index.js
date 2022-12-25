@@ -14,8 +14,13 @@ import Tree from '../components/Tree';
 import SunCalc from 'suncalc';
 import { useGeolocated } from 'react-geolocated';
 import Cloud from '../components/Cloud';
+import Buildings from '../components/Buildings';
+import { PositionalAudio } from '@react-three/drei';
 
 export default function Home() {
+  const sound = useRef();
+  const [play, setPlay] = useState(true);
+
   const { coords } = useGeolocated({
     positionOptions: {
       enableHighAccuracy: false,
@@ -139,6 +144,34 @@ export default function Home() {
     );
   }
 
+  function createBuildings() {
+    const number = 10;
+    let buildings = []; // The array of buildings to pass to the canvas.
+    let x = -5;
+
+    for (let i = 0; i < number; i++) {
+      x = x + 1;
+      let key = `building_${i}`;
+      // I want the spheres to be a nice loop, so the index goes up to number / 2,
+      // then back down.
+      let idx = i < number / 2 ? i : number - i;
+      buildings.push(
+        <Buildings key={key} position={[x, 0, 0]} index={idx} sound={sound} />
+      );
+    }
+    return buildings;
+  }
+
+  // Added a button to pause the music.
+  function playMusic() {
+    if (play) {
+      sound.current.pause();
+    } else {
+      sound.current.play();
+    }
+    setPlay(!play);
+  }
+
   return (
     <div className='container'>
       {waitForElement()}
@@ -174,7 +207,7 @@ export default function Home() {
         {/********** elements *********/}
         <Suspense fallback={null}>
           {/********** trees *********/}
-          <Tree
+          {/* <Tree
             scale={[0.9, 0.6, 0.6]} //depth, height, width
             rotation={[0, 80, 0]}
             position={[-8, -3, 0]} //x-red, y-green, z-blue
@@ -204,10 +237,8 @@ export default function Home() {
             scale={[0.8, 0.8, 0.6]}
             rotation={[80, 160, 80]}
             position={[10, -1, 0]}
-          />
-
+          /> */}
           {/********** clouds *********/}
-
           <Cloud
             scale={[1, 1, 2]}
             rotation={[0, 80, 0]}
@@ -221,21 +252,18 @@ export default function Home() {
             decay={2}
             color='#fffedb'
           />
-
           <Cloud
             scale={[1, 1, 2]}
             rotation={[0, 80, 0]}
             position={[-10, 12, -10]}
             color='#e8fcfb'
           />
-
           <Cloud
             scale={[1, 1, 2]}
             rotation={[0, 90, 180]}
             position={[8, 12, -20]}
             color='#e8fcfb'
           />
-
           <Cloud
             scale={[1, 1, 1.8]}
             rotation={[0, 80, 0]}
@@ -249,6 +277,9 @@ export default function Home() {
             decay={2}
             color='#fffedb'
           />
+          {/********** buildings *********/}
+          <PositionalAudio url='./music.mp3' distance={10} loop ref={sound} />
+          {createBuildings()}
         </Suspense>
       </Canvas>
 
@@ -267,6 +298,7 @@ export default function Home() {
           wide
           link='https://open.spotify.com/playlist/0V5IsHm0VJbmeffuLzgoc3?si=ddc0af96d95c4a4b'
         />
+        <button onClick={playMusic}>Play</button>
       </div>
     </div>
   );
