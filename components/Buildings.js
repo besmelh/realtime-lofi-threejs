@@ -21,7 +21,7 @@ export default function Buildings(props) {
     const analyzer = useRef();
 
     useEffect(() => {
-      analyzer.current = new THREE.AudioAnalyser(sound.current, 128);
+      analyzer.current = new THREE.AudioAnalyser(sound.current, 512);
     }, [sound]);
 
     useFrame(() => {
@@ -31,8 +31,8 @@ export default function Buildings(props) {
           data[props.index * 2],
           0,
           255,
-          0.25,
-          1.5
+          0.8,
+          1.2
         );
       }
     });
@@ -48,17 +48,5 @@ export default function Buildings(props) {
       </mesh>
       <Analyzer sound={props.sound} />
     </>
-    // <>
-    //   {[...Array(num)].map((x, i) => (
-    //     <mesh {...props} position={[i - 5, 0, 0]}>
-    //       <boxGeometry args={[0.4, 3, 0.4]} />
-    //       <meshStandardMaterial color={'orange'} />
-    //     </mesh>
-    //   ))}
-
-    //   <Suspense fallback={null}>
-    //     <PositionalAudio url='./music.mp3' distance={10} loop />
-    //   </Suspense>
-    // </>
   );
 }

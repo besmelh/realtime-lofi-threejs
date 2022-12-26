@@ -20,6 +20,11 @@ import { PositionalAudio } from '@react-three/drei';
 export default function Home() {
   const sound = useRef();
   const [play, setPlay] = useState(true);
+  const building_count = 10;
+  const randZ = useRef();
+  useEffect(() => {
+    randZ.current = randomLocations(10, -1.9, 1.9, true);
+  });
 
   const { coords } = useGeolocated({
     positionOptions: {
@@ -144,8 +149,22 @@ export default function Home() {
     );
   }
 
-  function createBuildings() {
+  function randomLocations(count, min, max, isFloat) {
+    console.log('creating new locations...');
+    let result = [];
+    for (let i = 0; i < count; i++) {
+      if (isFloat) {
+        result.push(Math.random() * (max - min) + min);
+      } else {
+        result.push(Math.floor(Math.random() * (max - min) + min));
+      }
+    }
+    return result;
+  }
+
+  function createBuildings(building_z_locations) {
     const number = 10;
+    console.log('building_z_locations', building_z_locations);
     let buildings = []; // The array of buildings to pass to the canvas.
     let x = -5;
 
@@ -158,6 +177,7 @@ export default function Home() {
       buildings.push(
         <Buildings key={key} position={[x, 0, 0]} index={idx} sound={sound} />
       );
+      console.log('added new building');
     }
     return buildings;
   }
@@ -279,7 +299,7 @@ export default function Home() {
           />
           {/********** buildings *********/}
           <PositionalAudio url='./music.mp3' distance={10} loop ref={sound} />
-          {createBuildings()}
+          {createBuildings(randZ)}
         </Suspense>
       </Canvas>
 
