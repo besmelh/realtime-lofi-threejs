@@ -19,6 +19,8 @@ export default function Buildings(props) {
    */
   function Analyzer({ sound }) {
     const analyzer = useRef();
+    const outMin = 0.8;
+    const outMax = 1.2;
 
     useEffect(() => {
       analyzer.current = new THREE.AudioAnalyser(sound.current, 512);
@@ -27,15 +29,30 @@ export default function Buildings(props) {
     useFrame(() => {
       if (analyzer.current) {
         let data = analyzer.current.getFrequencyData();
+
+        // increase y height
         mesh.current.scale.y = adjustScale(
           data[props.index * 2],
           0,
           255,
-          0.8,
-          1.2
+          outMin,
+          outMax
+        );
+
+        // decrease x and z, to give it a squashing effect
+        mesh.current.scale.x = mesh.current.scale.z = adjustScale(
+          data[props.index * 2],
+          0,
+          255,
+          outMax,
+          outMin
         );
       }
     });
+    // 0.8,
+    // 1.2
+
+    //saudia students care phone number: 920020828
 
     return <></>;
   }
@@ -43,7 +60,7 @@ export default function Buildings(props) {
   return (
     <>
       <mesh position={props.position} ref={mesh}>
-        <boxGeometry args={[0.4, 3, 0.4]} />
+        <boxGeometry args={[0.6, 3, 0.6]} /> {/* width, height, depth */}
         <meshStandardMaterial color={'orange'} />
       </mesh>
       <Analyzer sound={props.sound} />
