@@ -7,192 +7,17 @@ import {
   Environment,
   PivotControls,
   useHelper,
-  Sky,
 } from '@react-three/drei';
 import Spotify from 'react-spotify-embed';
-import Tree from '../components/Tree';
-import SunCalc from 'suncalc';
-import { useGeolocated } from 'react-geolocated';
-import Cloud from '../components/Cloud';
-import Buildings from '../components/Buildings';
 import { PositionalAudio } from '@react-three/drei';
+import AllClouds from '../components/AllClouds';
+import AllTrees from '../components/AllTrees';
+import AllBuildings from '../components/AllBuildings';
+import DynamicSky from '../components/DynamicSky';
 
 export default function Home() {
   const sound = useRef();
   const [play, setPlay] = useState(true);
-  const building_count = 10;
-  const randZ_default = [-2, -1.5, -1, -0.5, 0, 0.5];
-  // const randZ = useRef();
-  // useEffect(() => {
-  //   randZ.current = randomLocations(10, -1.9, 1.9, true);
-  // });
-
-  const [randZ, setRandZ] = useState(null);
-
-  useEffect(() => {
-    setRandZ(randomLocations(10, -1.9, 1.9, true));
-  }, []);
-
-  const { coords } = useGeolocated({
-    positionOptions: {
-      enableHighAccuracy: false,
-    },
-    userDecisionTimeout: 5000,
-  });
-
-  let curTime = new Date();
-  // coordinates of hawaii are default
-  var long = 19.8968;
-  var lat = 155.5828;
-
-  function waitForElement() {
-    if (typeof coords !== 'undefined') {
-      long = coords.longitude;
-      lat = coords.latitude;
-    } else {
-      setTimeout(waitForElement, 250);
-    }
-  }
-
-  waitForElement();
-
-  var times = SunCalc.getTimes(curTime, long, lat);
-
-  var sky;
-
-  //dawn
-  if (curTime < times.nightEnd) {
-    console.log('sunrise sky');
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[10, 0, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-  //sunrise
-  else if (curTime >= times.nightEnd && curTime < times.sunriseEnd) {
-    console.log('sunrise sky');
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[10, 0, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-  //morning
-  else if (curTime >= times.sunriseEnd && curTime < times.solarNoon) {
-    console.log('morning sky' + long + ' ' + lat);
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[10, 5, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-  //noon
-  else if (curTime >= times.solarNoon && curTime < times.goldenHour) {
-    console.log('noon sky');
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[0, 5, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-  //afternoon, goldenhour
-  else if (curTime >= times.goldenHour && curTime < times.sunsetStart) {
-    console.log('afternoon, goldenhour sky');
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[-10, 2, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-  //sunset
-  else if (curTime >= times.sunsetStart && curTime < times.dusk) {
-    console.log('sunset sky:' + long + ' ' + lat);
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[-10, 0, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-  //evening
-  else if (curTime >= times.dusk) {
-    console.log('evening sky:' + long + ' ' + lat);
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[-10, -10, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  } else {
-    console.log('default sky:' + long + ' ' + lat + ' ' + curTime);
-    console.log('times:', times);
-    sky = (
-      <Sky
-        distance={450000}
-        sunPosition={[10, 5, 0]}
-        inclination={0}
-        azimuth={0.25}
-      />
-    );
-  }
-
-  function randomLocations(count, min, max, isFloat) {
-    console.log('creating new locations...');
-    let result = [];
-    for (let i = 0; i < count; i++) {
-      if (isFloat) {
-        result.push(Math.random() * (max - min) + min);
-      } else {
-        result.push(Math.floor(Math.random() * (max - min) + min));
-      }
-    }
-    return result;
-  }
-
-  function createBuildings() {
-    const number = 10;
-    const this_randZ = randZ || randZ_default;
-    console.log('buildings_randZ', this_randZ);
-    let buildings = []; // The array of buildings to pass to the canvas.
-    let x = -5;
-
-    for (let i = 0; i < number; i++) {
-      x = x + 1;
-      let key = `building_${i}`;
-      // I want the spheres to be a nice loop, so the index goes up to number / 2,
-      // then back down.
-      let idx = i < number / 2 ? i : number - i;
-      buildings.push(
-        <Buildings
-          key={key}
-          position={[x, 0, this_randZ[i] || 0]}
-          index={idx}
-          sound={sound}
-        />
-      );
-    }
-    return buildings;
-  }
 
   // Added a button to pause the music.
   function playMusic() {
@@ -202,6 +27,15 @@ export default function Home() {
       sound.current.play();
     }
     setPlay(!play);
+  }
+
+  function waitForElement() {
+    if (typeof coords !== 'undefined') {
+      long = coords.longitude;
+      lat = coords.latitude;
+    } else {
+      setTimeout(waitForElement, 250);
+    }
   }
 
   return (
@@ -214,7 +48,7 @@ export default function Home() {
         {/* <axesHelper args={[3]} /> */}
 
         {/********** environment and lighting *********/}
-        {sky}
+        <DynamicSky />
         <hemisphereLight intensity={0.1} />
         <Environment files='models/ghibli-bg.hdr' />
         <ContactShadows opacity={0.2} color='#02261f' />
@@ -239,79 +73,12 @@ export default function Home() {
         {/********** elements *********/}
         <Suspense fallback={null}>
           {/********** trees *********/}
-          {/* <Tree
-            scale={[0.9, 0.6, 0.6]} //depth, height, width
-            rotation={[0, 80, 0]}
-            position={[-8, -3, 0]} //x-red, y-green, z-blue
-          />
-
-          <Tree
-            scale={[0.6, 0.7, 1]}
-            rotation={[0, 80, 0]}
-            position={[-8, -6, -1]}
-            color='#169166'
-          />
-
-          <Tree
-            scale={[1, 1.5, 1.1]}
-            rotation={[0, 80, 0]}
-            position={[-2, -8, -3]}
-          />
-
-          <Tree
-            scale={[0.6, 0.7, 1]}
-            rotation={[0, 80, 0]}
-            position={[5, -5, 0]}
-            color='#169166'
-          />
-
-          <Tree
-            scale={[0.8, 0.8, 0.6]}
-            rotation={[80, 160, 80]}
-            position={[10, -1, 0]}
-          /> */}
+          <AllTrees />
           {/********** clouds *********/}
-          <Cloud
-            scale={[1, 1, 2]}
-            rotation={[0, 80, 0]}
-            position={[-35, 12, -15]}
-            color='#e8fcfb'
-          />
-          <pointLight
-            intensity={0.1}
-            position={[-35, 12, -15]}
-            distance={30}
-            decay={2}
-            color='#fffedb'
-          />
-          <Cloud
-            scale={[1, 1, 2]}
-            rotation={[0, 80, 0]}
-            position={[-10, 12, -10]}
-            color='#e8fcfb'
-          />
-          <Cloud
-            scale={[1, 1, 2]}
-            rotation={[0, 90, 180]}
-            position={[8, 12, -20]}
-            color='#e8fcfb'
-          />
-          <Cloud
-            scale={[1, 1, 1.8]}
-            rotation={[0, 80, 0]}
-            position={[25, 12, -12]}
-            color='#e8fcfb'
-          />
-          <pointLight
-            intensity={0.1}
-            position={[25, 15, -12]}
-            distance={30}
-            decay={2}
-            color='#fffedb'
-          />
+          <AllClouds />
           {/********** buildings *********/}
           <PositionalAudio url='./music.mp3' distance={10} loop ref={sound} />
-          {createBuildings(randZ)}
+          <AllBuildings sound={sound} />
         </Suspense>
       </Canvas>
 

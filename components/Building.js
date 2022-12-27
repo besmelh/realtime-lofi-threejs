@@ -2,7 +2,7 @@ import React, { useEffect, useRef, Suspense } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 
-export default function Buildings(props) {
+export default function Building(props) {
   const mesh = useRef();
 
   /*
@@ -60,7 +60,7 @@ export default function Buildings(props) {
   return (
     <>
       <mesh position={props.position} ref={mesh}>
-        <boxGeometry args={[0.6, 3, 0.6]} /> {/* width, height, depth */}
+        <boxGeometry args={[1, 6, 0.5]} /> {/* width, height, depth */}
         <meshStandardMaterial color={'orange'} />
       </mesh>
       <Analyzer sound={props.sound} />
