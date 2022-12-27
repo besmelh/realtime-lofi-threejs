@@ -21,10 +21,17 @@ export default function Home() {
   const sound = useRef();
   const [play, setPlay] = useState(true);
   const building_count = 10;
-  const randZ = useRef();
+  const randZ_default = [-2, -1.5, -1, -0.5, 0, 0.5];
+  // const randZ = useRef();
+  // useEffect(() => {
+  //   randZ.current = randomLocations(10, -1.9, 1.9, true);
+  // });
+
+  const [randZ, setRandZ] = useState(null);
+
   useEffect(() => {
-    randZ.current = randomLocations(10, -1.9, 1.9, true);
-  });
+    setRandZ(randomLocations(10, -1.9, 1.9, true));
+  }, []);
 
   const { coords } = useGeolocated({
     positionOptions: {
@@ -162,9 +169,10 @@ export default function Home() {
     return result;
   }
 
-  function createBuildings(building_z_locations) {
+  function createBuildings() {
     const number = 10;
-    console.log('building_z_locations', building_z_locations);
+    const this_randZ = randZ || randZ_default;
+    console.log('buildings_randZ', this_randZ);
     let buildings = []; // The array of buildings to pass to the canvas.
     let x = -5;
 
@@ -175,9 +183,13 @@ export default function Home() {
       // then back down.
       let idx = i < number / 2 ? i : number - i;
       buildings.push(
-        <Buildings key={key} position={[x, 0, 0]} index={idx} sound={sound} />
+        <Buildings
+          key={key}
+          position={[x, 0, this_randZ[i] || 0]}
+          index={idx}
+          sound={sound}
+        />
       );
-      console.log('added new building');
     }
     return buildings;
   }
